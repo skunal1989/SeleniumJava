@@ -2,12 +2,14 @@ package TestCases;
 import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import org.openqa.selenium.TakesScreenshot;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
@@ -44,17 +46,13 @@ public class FirstTestCase {
 
         
             // Navigate to the website
-            driver.get("https:facebook.com");
+            driver.get("https://automationexercise.com/");
             driver.manage().window().maximize();
             driver.manage().deleteAllCookies();
             driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-            log.info("Login is suucessfull ");
+            log.info("Login is successfull ");
             
-            driver.findElement(By.xpath("//*[@id=\"email\"]")).sendKeys("smriti.kunal@gmail.com");
-            Thread.sleep(5000);
-            driver.findElement(By.xpath("//*[@id=\"pass\"]")).sendKeys("password");
-            Thread.sleep(5000);
-            driver.findElement(By.xpath("//button[@name='login']")).click();
+           
 
             // Initialize WebDriverWait
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
@@ -64,20 +62,16 @@ public class FirstTestCase {
             // Login to the Website ------//
             
            driver.findElement(By.xpath("//i[@class='fa fa-home']")).click();
+           
+           WebElement above = driver.findElement(By.xpath("//i[@class='fa fa-home']"));
+           File screensht = above.getScreenshotAs(OutputType.FILE);
+           FileUtils.copyFile(screensht, new File("./screenshotelement/image.jpg"));
            Thread.sleep(5000); 
-           File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-           
-           
-           
-           LocalDateTime dateTime = LocalDateTime.now();
-           DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-          
-           String formattedDateTime = dateTime.format(formatter);
-           File destinationFile = new File("Screenshot1.png");
-
-           // Save screenshot to file
-           FileHandler.copy(screenshot,destinationFile);
-           System.out.println("Screenshot saved as: " + destinationFile.getAbsolutePath());
+           File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+           LocalDateTime now = LocalDateTime.now();
+           DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm");
+           String formattedDateTime = now.format(formatter);
+           FileUtils.copyFile(scrFile, new File("./screenshotfolder/image"+formattedDateTime+".png"));
    
            driver.findElement(By.xpath("//a[@href='/login']")).click();
            wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//input[@data-qa='login-email']"))).sendKeys("smriti.kunal@clearview.com.au");
